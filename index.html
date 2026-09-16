@@ -485,8 +485,8 @@ window.buildSetup = function() {
             <input type="text" value="${o}" id="qo_${i}_${j}" placeholder="선택지 ${j+1}">
           </div>`).join('')}
       </div>
-      <div class="correct-select">
-        정답: <select id="qa_${i}">
+      <div class="correct-select" style="display:none">
+        <select id="qa_${i}">
           ${q.opts.map((_,j)=>`<option value="${j}" ${q.ans===j?'selected':''}>선택지 ${j+1}</option>`).join('')}
         </select>
       </div>`;
