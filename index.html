@@ -385,7 +385,7 @@ const app = initializeApp({
 const db = getDatabase(app);
 
 // ── 상수 ──
-const VOTE_TIME = 20;
+const VOTE_TIME = 7;
 const PTS_CORRECT = 10;
 const DB = 'quiz_game';
 
@@ -412,8 +412,8 @@ const DEFAULT_QUIZ = [
     ans: 3
   },
   {
-    q: "1화에서 불사가 소년의 모습으로 변신한 뒤 한 행동은?",
-    opts: ["늑대를 찾아 나섰다", "쓰러진 소년을 의자에 앉혀준 후 떠났다", "남쪽 마을 사람들을 따라갔다", "마을에서 계속 살았다"],
+    q: "1화에서 불사가 소년의 모습으로 변신한 뒤 첫 번째 한 행동은?",
+    opts: ["늑대를 찾아 나섰다", "소년을 의자에 앉혀줬다", "소년과 살던 집을 떠났다", "마을에서 계속 살았다"],
     ans: 1
   },
   {
@@ -510,8 +510,16 @@ window.startLobby = async function() {
   document.getElementById('join-url-display').textContent = joinUrl;
 
   const qd = document.getElementById('qr-canvas'); qd.innerHTML='';
-  try { new QRCode(qd,{text:joinUrl,width:200,height:200,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M}); }
-  catch(e){qd.textContent='QR 오류 - URL 복사 공유';}
+  try {
+    const QRCodeLib = window.QRCode || QRCode;
+    new QRCodeLib(qd,{text:joinUrl,width:200,height:200,colorDark:'#000',colorLight:'#fff',correctLevel:QRCodeLib.CorrectLevel.M});
+  } catch(e) {
+    // fallback: 구글 차트 API로 QR 이미지 생성
+    const img = document.createElement('img');
+    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(joinUrl);
+    img.width = 200; img.height = 200;
+    qd.appendChild(img);
+  }
 
   showScreen('screen-lobby');
   stopListener();
